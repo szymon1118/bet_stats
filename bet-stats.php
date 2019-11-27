@@ -73,6 +73,56 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-bet-stats.php';
  *
  * @since    1.0.0
  */
+ 
+//Temporary solution
+require_once plugin_dir_path( __FILE__ ) . 'bookmakers/Bookmaker.php';
+// require_once plugin_dir_path( __FILE__ ) . 'bookmakers/Fortuna.php';
+// require_once plugin_dir_path( __FILE__ ) . 'bookmakers/Sts.php';
+
+function bet_stats_info() {
+	$fortuna = new Fortuna();
+	$sts = new Sts();
+	$matches = $fortuna->getData()[0]['competitions'][0]['matches'];
+	$matchesSts = $sts->getData()['result'];
+	
+	//var_dump($fortuna->getData());
+	$len = count($matches);
+	//echo "xDDD: " . $len . "\n";
+	
+	?>
+		<table style="width:100%">
+	<?php
+	
+	for ($i = 0; $i < $len; $i++) {
+		?>
+			<tr style="margin-top: 20px;"><td>
+		<?php
+		
+		echo "Mecz: " . $matches[$i]['name'];
+		
+		?>
+			</td></tr>
+		<?php
+		
+		
+		?>
+			<tr><td>
+		<?php
+		
+		echo "Kurs Fortuna: " . $matches[$i]['odds'][0]['value'] . "\n";
+		echo "Kurs STS: " . $matchesSts[$i]['odds'][0]['odds_value'] . "\n";
+		
+		?>
+			</td></tr>
+		<?php
+	}
+	?>
+		</table>
+		<h1>Dziala :D</h1>
+	<?php
+}
+add_shortcode('betstats', 'bet_stats_info');
+ 
 function run_bet_stats() {
 
 	$plugin = new Bet_Stats();

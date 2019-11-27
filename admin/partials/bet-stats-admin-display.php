@@ -14,3 +14,4 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<h2>Betting statistics plugin works :D</h2>
