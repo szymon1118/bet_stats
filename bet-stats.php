@@ -9,14 +9,14 @@
  * that starts the plugin.
  *
  * @link              https://serwiskibic.azurewebsites.net/
- * @since             1.0.0
+ * @since             1.0
  * @package           Bet_Stats
  *
  * @wordpress-plugin
  * Plugin Name:       Betting statistics
  * Plugin URI:        https://serwiskibic.azurewebsites.net/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Version:           1.1
  * Author:            s15921, s15827, s15515, s14244
  * Author URI:        https://serwiskibic.azurewebsites.net/
  * License:           MIT
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'BET_STATS_VERSION', '1.0.0' );
+define( 'BET_STATS_VERSION', '1.1' );
 
 /**
  * The code that runs during plugin activation.
