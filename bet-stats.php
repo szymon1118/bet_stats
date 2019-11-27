@@ -89,36 +89,25 @@ function bet_stats_info() {
 	$len = count($matches);
 	//echo "xDDD: " . $len . "\n";
 	
-	?>
-		<table style="width:100%">
-	<?php
+	//<table style="display: block; width: 700px; height: auto; margin: 0 4rem;">
+	$html = '<table>';
 	
 	for ($i = 0; $i < $len; $i++) {
-		?>
-			<tr style="margin-top: 20px;"><td>
-		<?php
+		$html .= '<tr style="margin-top: 20px;"><td>';
 		
-		echo "Mecz: " . $matches[$i]['name'];
+		$html .= 'Mecz: ' . $matches[$i]['name'];
 		
-		?>
-			</td></tr>
-		<?php
+		$html .= '</td><td>';
 		
+		$html .= '<a href="https://www.efortuna.pl/pl/strona_glowna/pilka-nozna/' . substr($matches[$i]['matchid'], 3) . '">Kurs Fortuna</a>: ' . $matches[$i]['odds'][0]['value'] . ' | <a href="https://www.sts.pl/pl/oferta/zaklady-bukmacherskie/zaklady-sportowe/?action=offer&sport=184&region=6521&league=74157&oppty=' . $matchesSts[$i]['id_opportunity'] . '">Kurs STS</a>: ' . $matchesSts[$i]['odds'][0]['odds_value'];
 		
-		?>
-			<tr><td>
-		<?php
-		
-		echo "Kurs Fortuna: " . $matches[$i]['odds'][0]['value'] . "\n";
-		echo "Kurs STS: " . $matchesSts[$i]['odds'][0]['odds_value'] . "\n";
-		
-		?>
-			</td></tr>
-		<?php
+		$html .= '</td></tr>';
 	}
+	$html .= '</table>';
+	
+	return $html;
 	?>
-		</table>
-		<h1>Dziala :D</h1>
+		<!-- <h1>Dziala :D</h1> -->
 	<?php
 }
 add_shortcode('betstats', 'bet_stats_info');
