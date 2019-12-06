@@ -13,4 +13,36 @@
  */
 ?>
 
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
+<?php
+
+//$filesToRequire = glob(plugin_dir_path( __FILE__ ) . 'bookmakers/*.php');
+//foreach ($filesToRequire as $f) {
+//	require_once($f);
+//}
+
+spl_autoload_register(function ($class_name) {
+	//if doesnt work change to require, include or include_once
+    require_once plugin_dir_path( __FILE__ ) . 'bookmakers/' . $class_name . '.php';
+});
+
+//maybe there is something better than calling "getMatches()" for each class
+$bMakers = [Fortuna::getMatches(), Sts::getMatches()];
+
+?>
+
+<table>
+<?php for ($i = 0; $i < 6; $i++) { ?>
+	<tr style="margin-top: 20px;">
+		<td>Mecz: <?php echo $bMakers[0][$i]->getName(); ?></td>
+		<td>
+<?php
+	foreach ($bMakers as $bMaker) {
+		$match = $bMaker[$i];
+?>
+			<a href="<?php echo $match->getLink(); ?>">Kurs <?php echo $match->getBookmakerName(); ?></a>: <?php echo $match->getStats(); ?> | 
+			
+	<?php } ?>
+		</td>
+	</tr>
+<?php } ?>
+</table>

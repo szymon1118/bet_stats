@@ -100,4 +100,45 @@ class Bet_Stats_Public {
 
 	}
 
+	/**
+	 * Load statistics from bookmakers APIs and display for the public-facing side of the site.
+	 *
+	 * @since    1.2
+	 */
+	public function bet_stats_info() {
+		
+		spl_autoload_register(function ($class_name) {
+			//if doesnt work change to require, include or include_once
+			require_once plugin_dir_path( __FILE__ ) . 'partials/bookmakers/' . $class_name . '.php';
+		});
+
+		//maybe there is something better than calling "getMatches()" for each class
+		$bMakers = [Fortuna::getMatches(), Sts::getMatches()];
+		
+		$html = '<table>';
+		
+		for ($i = 0; $i < 6; $i++) {
+			$html .= '<tr style="margin-top: 20px;"><td>';
+			
+			$html .= 'Mecz: ' . $bMakers[0][$i]->getName();
+			
+			$html .= '</td><td>';
+			
+			foreach ($bMakers as $bMaker) {
+				$match = $bMaker[$i];
+				$html .= '<a href="' . $match->getLink() . '">Kurs ' . $match->getBookmakerName() . '</a>: ' . $match->getStats() . ' | ';
+			}
+			
+			$html .= '</td></tr>';
+		}
+		$html .= '</table>';
+		
+		return $html;
+		
+		// ob_start();
+		// get_template_part( 'partials/bet_stats_public_display' );
+		// return ob_get_clean();
+		
+	}
+
 }

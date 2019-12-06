@@ -16,7 +16,7 @@
  * Plugin Name:       Betting statistics
  * Plugin URI:        https://serwiskibic.azurewebsites.net/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.1
+ * Version:           1.2
  * Author:            s15921, s15827, s15515, s14244
  * Author URI:        https://serwiskibic.azurewebsites.net/
  * License:           MIT
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'BET_STATS_VERSION', '1.1' );
+define( 'BET_STATS_VERSION', '1.2' );
 
 /**
  * The code that runs during plugin activation.
@@ -73,45 +73,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-bet-stats.php';
  *
  * @since    1.0.0
  */
- 
-//Temporary solution
-require_once plugin_dir_path( __FILE__ ) . 'bookmakers/Bookmaker.php';
-// require_once plugin_dir_path( __FILE__ ) . 'bookmakers/Fortuna.php';
-// require_once plugin_dir_path( __FILE__ ) . 'bookmakers/Sts.php';
 
-function bet_stats_info() {
-	$fortuna = new Fortuna();
-	$sts = new Sts();
-	$matches = $fortuna->getData()[0]['competitions'][0]['matches'];
-	$matchesSts = $sts->getData()['result'];
-	
-	//var_dump($fortuna->getData());
-	$len = count($matches);
-	//echo "xDDD: " . $len . "\n";
-	
-	//<table style="display: block; width: 700px; height: auto; margin: 0 4rem;">
-	$html = '<table>';
-	
-	for ($i = 0; $i < $len; $i++) {
-		$html .= '<tr style="margin-top: 20px;"><td>';
-		
-		$html .= 'Mecz: ' . $matches[$i]['name'];
-		
-		$html .= '</td><td>';
-		
-		$html .= '<a href="https://www.efortuna.pl/pl/strona_glowna/pilka-nozna/' . substr($matches[$i]['matchid'], 3) . '">Kurs Fortuna</a>: ' . $matches[$i]['odds'][0]['value'] . ' | <a href="https://www.sts.pl/pl/oferta/zaklady-bukmacherskie/zaklady-sportowe/?action=offer&sport=184&region=6521&league=74157&oppty=' . $matchesSts[$i]['id_opportunity'] . '">Kurs STS</a>: ' . $matchesSts[$i]['odds'][0]['odds_value'];
-		
-		$html .= '</td></tr>';
-	}
-	$html .= '</table>';
-	
-	return $html;
-	?>
-		<!-- <h1>Dziala :D</h1> -->
-	<?php
-}
-add_shortcode('betstats', 'bet_stats_info');
- 
 function run_bet_stats() {
 
 	$plugin = new Bet_Stats();
