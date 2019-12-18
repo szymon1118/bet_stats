@@ -15,25 +15,25 @@
 
 <?php
 
-//$filesToRequire = glob(plugin_dir_path( __FILE__ ) . 'bookmakers/*.php');
-//foreach ($filesToRequire as $f) {
-//	require_once($f);
-//}
-
 spl_autoload_register(function ($class_name) {
-	//if doesnt work change to require, include or include_once
     require_once plugin_dir_path( __FILE__ ) . 'bookmakers/' . $class_name . '.php';
 });
 
-//maybe there is something better than calling "getMatches()" for each class
-$bMakers = [Fortuna::getMatches(), Sts::getMatches()];
+//add new bookmaker class to an array and implement that class to add new bookmaker to plugin
+$bMakers = ['Fortuna', 'Sts'];
+for ($i = 0; $i < count($bMakers); $i++) {
+	$bMakers[$i] = $bMakers[$i]::getMatches();
+}
+
+//get matches from any bookmaker (random choice) to get match name from them later (the first one is chosen)
+$anyBMakerMatches = $bMakers[0];
 
 ?>
 
 <table>
 <?php for ($i = 0; $i < 6; $i++) { ?>
 	<tr style="margin-top: 20px;">
-		<td>Mecz: <?php echo $bMakers[0][$i]->getName(); ?></td>
+		<td>Mecz: <?php echo $anyBMakerMatches[$i]->getName(); ?></td>
 		<td>
 <?php
 	foreach ($bMakers as $bMaker) {

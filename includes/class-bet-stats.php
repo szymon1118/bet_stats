@@ -121,6 +121,11 @@ class Bet_Stats {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-bet-stats-public.php';
+		
+		/**
+		 * The class responsible for all of widget stuff.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-bet-stats-widget.php';
 
 		$this->loader = new Bet_Stats_Loader();
 
@@ -172,6 +177,7 @@ class Bet_Stats {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'widgets_init', $plugin_public, 'reg_widget');
 		$this->loader->add_shortcode( 'betstats', $plugin_public, 'bet_stats_info' );
 
 	}
