@@ -34,13 +34,17 @@ class Sts extends Bookmaker {
 		return ($this->stats)[0]['odds_value'];
 		
 	}
-	
+
 	public function getLink() {
-		
-		return 'https://www.sts.pl/pl/oferta/zaklady-bukmacherskie/zaklady-sportowe/?action=offer&sport=184&region=6521&league=74157&oppty=' . $this->matchId;
-		
+
+		if ( Util::detectDevice()->isMobile() ) {
+			return 'https://m.sts.pl/pl/sport/184/6521/74157/' . $this->matchId;
+		} else {
+			return 'https://www.sts.pl/pl/oferta/zaklady-bukmacherskie/zaklady-sportowe/?action=offer&sport=184&region=6521&league=74157&oppty=' . $this->matchId;
+		}
+
 	}
-	
+
 	protected static function loadData() {
 		
 		$url = 'https://mapi.sts.pl/';

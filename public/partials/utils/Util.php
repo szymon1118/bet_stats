@@ -3,7 +3,9 @@
 require_once plugin_dir_path( __FILE__ ) . 'Method.php';
 
 class Util {
-	
+
+	private static $detect_device;
+
 	public static function getJsonData($url, $method, $headers, $payload) {
 		
 		//Create a cURL handle.
@@ -44,7 +46,19 @@ class Util {
 		curl_close($ch);
 		
 	}
-	
+
+	public static function detectDevice() {
+
+		if (self::$detect_device === null) {
+
+			require_once plugin_dir_path( __FILE__ ) . 'Mobile_Detect.php';
+			self::$detect_device = new Mobile_Detect();
+
+		}
+		return self::$detect_device;
+
+	}
+
 }
 
 ?>

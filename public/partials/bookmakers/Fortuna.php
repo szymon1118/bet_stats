@@ -34,13 +34,17 @@ class Fortuna extends Bookmaker {
 		return ($this->stats)[0]['value'];
 		
 	}
-	
+
 	public function getLink() {
-		
-		return 'https://www.efortuna.pl/pl/strona_glowna/pilka-nozna/' . substr($this->matchId, 3);
-		
+
+		if ( Util::detectDevice()->isMobile() ) {
+			return 'https://gm.efortuna.pl/zaklady_bukmacherskie/pi%C5%82ka-nozna/1-anglia/' . $this->matchId;
+		} else {
+			return 'https://www.efortuna.pl/pl/strona_glowna/pilka-nozna/' . substr($this->matchId, 3);
+		}
+
 	}
-	
+
 	protected static function loadData() {
 		
 		$url = 'https://gm.efortuna.pl/api/aos/PL/prematch/leagues/competition/matches';
