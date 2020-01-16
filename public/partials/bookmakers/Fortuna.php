@@ -1,5 +1,6 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . '../utils/Method.php';
 require_once plugin_dir_path( __FILE__ ) . '../utils/Util.php';
 
 class Fortuna extends Bookmaker {
@@ -52,7 +53,7 @@ class Fortuna extends Bookmaker {
 			'User-Agent: APP 3.5.1; AN 7.1.1'
 		);
 		
-		$res = Util::getJsonData($url, 'GET', $customHeaders, null);
+		$res = Util::getJsonData($url, Method::GET, $customHeaders, null);
 		
 		return $res[0]['competitions'][0]['matches'];
 		

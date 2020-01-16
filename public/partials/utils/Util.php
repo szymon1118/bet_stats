@@ -1,5 +1,7 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . 'Method.php';
+
 class Util {
 	
 	public static function getJsonData($url, $method, $headers, $payload) {
@@ -7,12 +9,11 @@ class Util {
 		//Create a cURL handle.
 		$ch = curl_init($url);
 		
-		//maybe use something like Enum instead of strings for method
 		switch ($method) {
-			case 'GET':
+			case Method::GET:
 				curl_setopt($ch, CURLOPT_HTTPGET, true);
 				break;
-			case 'POST':
+			case Method::POST:
 				curl_setopt($ch, CURLOPT_POST, true);
 				break;
 			default:
@@ -20,12 +21,12 @@ class Util {
 		}
 		
 		//payload for POST request
-		if ($method == 'POST' && $payload != null) {
+		if ($method === Method::POST && $payload !== null) {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 		}
 		
 		//custom headers for request if needed
-		if ($headers != null) {
+		if ($headers !== null) {
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		}
 		 

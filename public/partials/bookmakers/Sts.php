@@ -1,5 +1,6 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . '../utils/Method.php';
 require_once plugin_dir_path( __FILE__ ) . '../utils/Util.php';
 
 class Sts extends Bookmaker {
@@ -46,7 +47,7 @@ class Sts extends Bookmaker {
 		
 		$payload = '{"app-id":"fb52b2d7-abbd-4d49-b18a-f3936a7f0805","id":1,"jsonrpc":"2.0","lang":"pl","method":"prematch.league","params":{"league":"74157","opptyType":"0"},"session":"fb52b2d7-abbd-4d49-b18a-f3936a7f0805","station-name":"androidapp"}';
 		
-		$res = Util::getJsonData($url, 'POST', null, $payload);
+		$res = Util::getJsonData($url, Method::POST, null, $payload);
 		
 		return $res['result'];
 		
