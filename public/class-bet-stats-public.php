@@ -121,7 +121,10 @@ class Bet_Stats_Public {
 	public function bet_stats_set_templ_data() {
 
 		spl_autoload_register(function ($class_name) {
-			require_once plugin_dir_path( __FILE__ ) . 'partials/bookmakers/' . $class_name . '.php';
+			$file = plugin_dir_path( __FILE__ ) . 'partials/bookmakers/' . $class_name . '.php';
+			if (file_exists($file)) {
+				require_once $file;
+			}
 		});
 
 		//add new bookmaker class to an array and implement that class to add new bookmaker to plugin
