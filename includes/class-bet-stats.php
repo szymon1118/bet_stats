@@ -40,6 +40,15 @@ class Bet_Stats {
 	protected $loader;
 
 	/**
+	 * The loader that's responsible for loading template files in plugin.
+	 *
+	 * @since    1.4
+	 * @access   protected
+	 * @var      Bet_Stats_Template_Loader    $template_loader    Loads template files in plugin.
+	 */
+	protected $template_loader;
+
+	/**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
@@ -121,12 +130,18 @@ class Bet_Stats {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-bet-stats-public.php';
-		
+
 		/**
 		 * The class responsible for all of widget stuff.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-bet-stats-widget.php';
 
+		/**
+		 * The class responsible for loading template files.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-bet-stats-template-loader.php';
+
+		$this->template_loader = new Bet_Stats_Template_Loader();
 		$this->loader = new Bet_Stats_Loader();
 
 	}
@@ -173,7 +188,7 @@ class Bet_Stats {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Bet_Stats_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Bet_Stats_Public( $this->get_plugin_name(), $this->get_version(), $this->template_loader );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );

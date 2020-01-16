@@ -41,16 +41,29 @@ class Bet_Stats_Public {
 	private $version;
 
 	/**
+	 * The loader that's responsible for loading template files in plugin.
+	 *
+	 * @since    1.4
+	 * @access   private
+	 * @var      Bet_Stats_Template_Loader    $template_loader    Template loader object.
+	 */
+	private $template_loader;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
+	 * @param      Bet_Stats_Template_Loader    $template_loader    Template loader object.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $template_loader ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->template_loader = $template_loader;
+
+		$this->bet_stats_set_templ_data();
 
 	}
 
@@ -101,6 +114,27 @@ class Bet_Stats_Public {
 	}
 
 	/**
+	 * Sets data which will be passed later to template.
+	 *
+	 * @since    1.4
+	 */
+	public function bet_stats_set_templ_data() {
+
+		spl_autoload_register(function ($class_name) {
+			require_once plugin_dir_path( __FILE__ ) . 'partials/bookmakers/' . $class_name . '.php';
+		});
+
+		//add new bookmaker class to an array and implement that class to add new bookmaker to plugin
+		$bMakers = ['Fortuna', 'Sts'];
+		for ($i = 0; $i < count($bMakers); $i++) {
+			$bMakers[$i] = $bMakers[$i]::getMatches();
+		}
+
+		$this->template_loader = array( 'self' => $this->template_loader, 'data' => $bMakers );
+
+	}
+
+	/**
 	 * Load statistics from bookmakers APIs and display for the public-facing side of the site.
 	 *
 	 * @since    1.2
@@ -108,7 +142,11 @@ class Bet_Stats_Public {
 	public function bet_stats_info() {
 
 		ob_start();
-		require plugin_dir_path( __FILE__ ) . 'partials/bet-stats-public-display.php';
+
+		$this->template_loader['self']
+			->set_template_data( $this->template_loader['data'], 'bMakers' )
+			->get_template_part( 'bet-stats-public-display' );
+
 		return ob_get_clean();
 
 	}

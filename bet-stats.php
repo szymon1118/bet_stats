@@ -38,6 +38,11 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'BET_STATS_VERSION', '1.3' );
 
 /**
+ * Define constant for the root directory path of this plugin.
+ */
+define( 'BET_STATS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
+/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-bet-stats-activator.php
  */

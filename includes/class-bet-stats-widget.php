@@ -28,7 +28,7 @@ class Bet_Stats_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		require plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/bet-stats-public-display.php';
+		// require plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/bet-stats-public-display.php';
 
 	}
 	/**
