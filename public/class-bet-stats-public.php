@@ -162,7 +162,8 @@ class Bet_Stats_Public {
 	 */
 	public function reg_widget() {
 
-		register_widget( 'Bet_Stats_Widget' );
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-bet-stats-helper-widget.php';
+		register_widget( new Bet_Stats_Helper_Widget( $this->template_loader ) );
 
 	}
 

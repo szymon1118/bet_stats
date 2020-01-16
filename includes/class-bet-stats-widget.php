@@ -3,13 +3,24 @@
 class Bet_Stats_Widget extends WP_Widget {
 
 	/**
+	 * The loader that's responsible for loading template files in plugin.
+	 *
+	 * @since 1.4
+	 *
+	 * @var array
+	 */
+	private $template_loader;
+
+	/**
 	 * Sets up the widgets name etc
 	 *
 	 * @link https://developer.wordpress.org/reference/classes/wp_widget/__construct/
 	 * @see https://developer.wordpress.org/reference/functions/wp_register_sidebar_widget/
 	 *
 	 */
-	public function __construct() {
+	public function __construct( $template_loader ) {
+
+		$this->template_loader = $template_loader;
 
 		$widget_ops = array( 
 			'classname' => 'bet_stats',
@@ -28,7 +39,9 @@ class Bet_Stats_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		// require plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/bet-stats-public-display.php';
+		$this->template_loader['self']
+				->set_template_data( $this->template_loader['data'], 'bMakers' )
+				->get_template_part( 'bet-stats-public-display' );
 
 	}
 	/**
