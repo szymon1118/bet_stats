@@ -5,15 +5,23 @@ require_once plugin_dir_path( __FILE__ ) . '../utils/Util.php';
 
 class Fortuna extends Bookmaker {
 
-	private static $dataToReturn = array( 'name' => '', 'odds' => '', 'matchid' => '' );
+	private static $dataToReturn = array( 'teamA' => '', 'teamB' => '', 'odds' => '', 'matchid' => '' );
 
-	private $matchName;
+	private $teamAName;
+	private $teamBName;
 	private $odds;
 	private $matchId;
-	
-	public function __construct($matchName, $odds, $matchId) {
+
+	private static $tmpOdds = array(
+		'teamA_win' => array( 'name' =>  'Team A win', 'value' => 0 ),
+		'draw' => array( 'name' => 'draw', 'value' => 0 ),
+		'teamB_win' => array( 'name' => 'Team B win', 'value' => 0 )
+	);
+
+	public function __construct($teamAName, $teamBName, $odds, $matchId) {
 		
-		$this->matchName = $matchName;
+		$this->teamAName = $teamAName;
+		$this->teamBName = $teamBName;
 		$this->odds = $odds;
 		$this->matchId = $matchId;
 		
@@ -24,13 +32,19 @@ class Fortuna extends Bookmaker {
 		return "Fortuna";
 		
 	}
-	
-	public function getMatchName() {
+
+	public function getTeamAName() {
 		
-		return $this->matchName;
+		return $this->teamAName;
 		
 	}
-	
+
+	public function getTeamBName() {
+		
+		return $this->teamBName;
+		
+	}
+
 	public function getOdds() {
 		
 		return ($this->odds)[0]['value'];
@@ -67,8 +81,18 @@ class Fortuna extends Bookmaker {
 		$parsedData = array();
 		for ($i = 0; $i < $len; $i++) {
 			$data = $resMatches[$i];
-			self::$dataToReturn['name'] = $data['name'];
-			self::$dataToReturn['odds'] = $data['odds'];
+			self::$dataToReturn['teamA'] = $data['participantH1'];
+			self::$dataToReturn['teamB'] = $data['participantA1'];
+
+			//parse odds
+			$tmpBookOdds = $data['odds'];
+			self::$tmpOdds['teamA_win']['name'] = $data['participantH1'] . ' win';
+			self::$tmpOdds['teamA_win']['value'] = $tmpBookOdds[0]['value'];
+			self::$tmpOdds['draw']['value'] = $tmpBookOdds[1]['value'];
+			self::$tmpOdds['teamB_win']['name'] = $data['participantA1'] . ' win';
+			self::$tmpOdds['teamB_win']['value'] = $tmpBookOdds[2]['value'];
+			self::$dataToReturn['odds'] = self::$tmpOdds;
+
 			self::$dataToReturn['matchid'] = $data['matchid'];
 			$parsedData[] = self::$dataToReturn;
 		}
@@ -96,5 +120,3 @@ class Fortuna extends Bookmaker {
 	}
 
 }
-
-?>

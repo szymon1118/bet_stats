@@ -25,7 +25,7 @@ $anyBMakerMatches = $bMakers[0];
 <table>
 <?php for ($i = 0; $i < 6; $i++) { ?>
 	<tr style="margin-top: 20px;">
-		<td>Mecz: <?php echo $anyBMakerMatches[$i]->getMatchName(); ?></td>
+		<td>Mecz: <?php echo $anyBMakerMatches[$i]->getTeamAName() . ' - ' . $anyBMakerMatches[$i]->getTeamBName(); ?></td>
 		<td>
 <?php
 	foreach ($bMakers as $bMaker) {

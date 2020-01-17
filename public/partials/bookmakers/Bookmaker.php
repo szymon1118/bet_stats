@@ -3,7 +3,8 @@
 abstract class Bookmaker {
 
 	abstract public function getBookmakerName();
-	abstract public function getMatchName();
+	abstract public function getTeamAName();
+	abstract public function getTeamBName();
 	abstract public function getOdds();
 	abstract public function getLink();
 	abstract protected static function loadData();
@@ -19,7 +20,7 @@ abstract class Bookmaker {
 
 		for ($i = 0; $i < $len; $i++) {
 			$m = $data[$i];
-			$matches[$i] = new static($m['name'], $m['odds'], $m['matchid']);
+			$matches[$i] = new static($m['teamA'], $m['teamB'], $m['odds'], $m['matchid']);
 		}
 
 		return $matches;
