@@ -47,7 +47,7 @@ class Fortuna extends Bookmaker {
 
 	public function getOdds() {
 		
-		return ($this->odds)[0]['value'];
+		return $this->odds;
 		
 	}
 
