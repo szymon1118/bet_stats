@@ -7,10 +7,10 @@ class Util {
 	private static $detect_device;
 
 	public static function getJsonData($url, $method, $headers, $payload) {
-		
+
 		//Create a cURL handle.
 		$ch = curl_init($url);
-		
+
 		switch ($method) {
 			case Method::GET:
 				curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -21,30 +21,32 @@ class Util {
 			default:
 				curl_setopt($ch, CURLOPT_HTTPGET, true);
 		}
-		
+
 		//payload for POST request
 		if ($method === Method::POST && $payload !== null) {
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
 		}
-		
+
 		//custom headers for request if needed
 		if ($headers !== null) {
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		}
-		 
+
 		//Set options to follow redirects and return output
 		//as a string.
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		 
+
 		//Execute the request.
 		$result = curl_exec($ch);
-		 
+
 		$jsonRes = json_decode($result, true);
-		return $jsonRes;
-		
+		$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
 		curl_close($ch);
-		
+
+		return array( 'statusCode' => $httpcode, 'resData' => $jsonRes );
+
 	}
 
 	public static function detectDevice() {

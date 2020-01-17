@@ -1,11 +1,29 @@
 <?php
 
-//maybe change to an interface if no method implementation
 abstract class Bookmaker {
 
+	abstract public function getBookmakerName();
+	abstract public function getMatchName();
+	abstract public function getOdds();
+	abstract public function getLink();
 	abstract protected static function loadData();
-	abstract public static function getMatches();
+	abstract protected static function loadDataFromAPI();
+	abstract protected static function loadDataFromHTML();
+
+	public static function getMatches() {
+
+		$data = static::loadData();
+		$len = count($data);
+
+		$matches = array();
+
+		for ($i = 0; $i < $len; $i++) {
+			$m = $data[$i];
+			$matches[$i] = new static($m['name'], $m['odds'], $m['matchid']);
+		}
+
+		return $matches;
+
+	}
 
 }
-
-?>

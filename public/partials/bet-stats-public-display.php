@@ -25,13 +25,13 @@ $anyBMakerMatches = $bMakers[0];
 <table>
 <?php for ($i = 0; $i < 6; $i++) { ?>
 	<tr style="margin-top: 20px;">
-		<td>Mecz: <?php echo $anyBMakerMatches[$i]->getName(); ?></td>
+		<td>Mecz: <?php echo $anyBMakerMatches[$i]->getMatchName(); ?></td>
 		<td>
 <?php
 	foreach ($bMakers as $bMaker) {
 		$match = $bMaker[$i];
 ?>
-			<a href="<?php echo $match->getLink(); ?>">Kurs <?php echo $match->getBookmakerName(); ?></a>: <?php echo $match->getStats(); ?> | 
+			<a href="<?php echo $match->getLink(); ?>">Kurs <?php echo $match->getBookmakerName(); ?></a>: <?php echo $match->getOdds(); ?> | 
 			
 	<?php } ?>
 		</td>

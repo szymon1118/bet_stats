@@ -4,15 +4,17 @@ require_once plugin_dir_path( __FILE__ ) . '../utils/Method.php';
 require_once plugin_dir_path( __FILE__ ) . '../utils/Util.php';
 
 class Fortuna extends Bookmaker {
-	
+
+	private static $dataToReturn = array( 'name' => '', 'odds' => '', 'matchid' => '' );
+
 	private $matchName;
-	private $stats;
+	private $odds;
 	private $matchId;
 	
-	public function __construct($matchName, $stats, $matchId) {
+	public function __construct($matchName, $odds, $matchId) {
 		
 		$this->matchName = $matchName;
-		$this->stats = $stats;
+		$this->odds = $odds;
 		$this->matchId = $matchId;
 		
 	}
@@ -23,15 +25,15 @@ class Fortuna extends Bookmaker {
 		
 	}
 	
-	public function getName() {
+	public function getMatchName() {
 		
 		return $this->matchName;
 		
 	}
 	
-	public function getStats() {
+	public function getOdds() {
 		
-		return ($this->stats)[0]['value'];
+		return ($this->odds)[0]['value'];
 		
 	}
 
@@ -45,7 +47,7 @@ class Fortuna extends Bookmaker {
 
 	}
 
-	protected static function loadData() {
+	protected static function loadDataFromAPI() {
 		
 		$url = 'https://gm.efortuna.pl/api/aos/PL/prematch/leagues/competition/matches';
 		
@@ -59,24 +61,38 @@ class Fortuna extends Bookmaker {
 		
 		$res = Util::getJsonData($url, Method::GET, $customHeaders, null);
 		
-		return $res[0]['competitions'][0]['matches'];
+		//parsing data
+		$resMatches = $res['resData'][0]['competitions'][0]['matches'];
+		$len = count($resMatches);
+		$parsedData = array();
+		for ($i = 0; $i < $len; $i++) {
+			$data = $resMatches[$i];
+			self::$dataToReturn['name'] = $data['name'];
+			self::$dataToReturn['odds'] = $data['odds'];
+			self::$dataToReturn['matchid'] = $data['matchid'];
+			$parsedData[] = self::$dataToReturn;
+		}
+
+		return array(
+			'status' => $res['statusCode'],
+			'data' => $parsedData
+		);
 		
 	}
-	
-	public static function getMatches() {
-		
-		$matchesOld = Fortuna::loadData();
-		$len = count($matchesOld);
-		
-		$matchesNew = array();
-		
-		for ($i = 0; $i < $len; $i++) {
-			$m = $matchesOld[$i];
-			$matchesNew[$i] = new Fortuna($m['name'], $m['odds'], $m['matchid']);
+
+	protected static function loadDataFromHTML() {}
+
+	protected static function loadData() {
+
+		$apiData = self::loadDataFromAPI();
+		$htmlData = self::loadDataFromHTML();
+
+		if ( $apiData['status'] === 200 ) {
+			return $apiData['data'];
+		} else if ( $htmlData['status'] === 200 ) {
+			return $htmlData['data'];
 		}
-		
-		return $matchesNew;
-		
+
 	}
 
 }

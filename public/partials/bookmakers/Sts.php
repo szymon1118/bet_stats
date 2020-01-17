@@ -5,14 +5,16 @@ require_once plugin_dir_path( __FILE__ ) . '../utils/Util.php';
 
 class Sts extends Bookmaker {
 	
+	private static $dataToReturn = array( 'name' => '', 'odds' => '', 'matchid' => '' );
+	
 	private $matchName;
-	private $stats;
+	private $odds;
 	private $matchId;
 	
-	public function __construct($matchName, $stats, $matchId) {
+	public function __construct($matchName, $odds, $matchId) {
 		
 		$this->matchName = $matchName;
-		$this->stats = $stats;
+		$this->odds = $odds;
 		$this->matchId = $matchId;
 		
 	}
@@ -23,15 +25,15 @@ class Sts extends Bookmaker {
 		
 	}
 	
-	public function getName() {
+	public function getMatchName() {
 		
 		return $this->matchName;
 		
 	}
 	
-	public function getStats() {
+	public function getOdds() {
 		
-		return ($this->stats)[0]['odds_value'];
+		return ($this->odds)[0]['odds_value'];
 		
 	}
 
@@ -45,32 +47,46 @@ class Sts extends Bookmaker {
 
 	}
 
-	protected static function loadData() {
+	protected static function loadDataFromAPI() {
 		
 		$url = 'https://mapi.sts.pl/';
-		
+
 		$payload = '{"app-id":"fb52b2d7-abbd-4d49-b18a-f3936a7f0805","id":1,"jsonrpc":"2.0","lang":"pl","method":"prematch.league","params":{"league":"74157","opptyType":"0"},"session":"fb52b2d7-abbd-4d49-b18a-f3936a7f0805","station-name":"androidapp"}';
-		
+
 		$res = Util::getJsonData($url, Method::POST, null, $payload);
 		
-		return $res['result'];
+		//parsing data
+		$resMatches = $res['resData']['result'];
+		$len = count($resMatches);
+		$parsedData = array();
+		for ($i = 0; $i < $len; $i++) {
+			$data = $resMatches[$i];
+			self::$dataToReturn['name'] = $data['oppty_name'];
+			self::$dataToReturn['odds'] = $data['odds'];
+			self::$dataToReturn['matchid'] = $data['id_opportunity'];
+			$parsedData[] = self::$dataToReturn;
+		}
+
+		return array(
+			'status' => $res['statusCode'],
+			'data' => $parsedData
+		);
 		
 	}
-	
-	public static function getMatches() {
-		
-		$matchesOld = Sts::loadData();
-		$len = count($matchesOld);
-		
-		$matchesNew = array();
-		
-		for ($i = 0; $i < $len; $i++) {
-			$m = $matchesOld[$i];
-			$matchesNew[$i] = new Sts($m['oppty_name'], $m['odds'], $m['id_opportunity']);
+
+	protected static function loadDataFromHTML() {}
+
+	protected static function loadData() {
+
+		$apiData = self::loadDataFromAPI();
+		$htmlData = self::loadDataFromHTML();
+
+		if ( $apiData['status'] === 200 ) {
+			return $apiData['data'];
+		} else if ( $htmlData['status'] === 200 ) {
+			return $htmlData['data'];
 		}
-		
-		return $matchesNew;
-		
+
 	}
 
 }
